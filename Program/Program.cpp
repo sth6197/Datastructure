@@ -3,7 +3,7 @@
 using namespace std;
 
 template <typename T>
-class SingleLinkedList
+class DoubleLinkedList
 {
 private:
     int size;
@@ -12,117 +12,95 @@ private:
     {
         T data;
         Node* next;
+        Node* previous;
     };
 
     Node* head;
+    Node* tail;
 
 public:
-    SingleLinkedList()
+    DoubleLinkedList()
     {
         size = 0;
         head = nullptr;
-    }
-
-    void PushFront(T data)
-    {
-        if (head == nullptr)
-        {
-            head = new Node;
-
-            head->data = data;
-            head->next = nullptr;
-        }
-        else
-        {
-            Node* newNode = new Node;
-
-            newNode->data = data;
-            newNode->next = head;
-
-            head = newNode;
-        }
-
-        size++;
-    }
-
-    void PopFront()
-    {
-        if (head == nullptr)
-        {
-            cout << "Linked List is Empty" << endl;
-        }
-        else
-        {
-            Node* deleteNode = head;
-
-            head = deleteNode->next;
-
-            delete deleteNode;
-
-            size--;
-        }
+        tail = nullptr;
     }
 
     void PushBack(T data)
     {
-        if (head == nullptr)
-        {
-            head = new Node;
+        Node* newNode = new Node;
 
-            head->data = data;
-            head->next = nullptr;
-        }
+        newNode->data = data;
+        newNode->next = nullptr;
+        newNode->previous = nullptr;
+
+        if (tail == nullptr)
+        {
+            tail = newNode;     
+            head = tail;
+        } 
         else
         {
-            Node* currentNode = head;
-
-            while (currentNode->next != nullptr)
-            {
-                currentNode = currentNode->next;
-            }
-
-            Node* newNode = new Node;
-
-            currentNode->next = newNode;
-
-            newNode->data = data;
-            newNode->next = nullptr;
+            tail->next = newNode;
+            newNode->previous = tail;
+            tail = newNode;
         }
-
         size++;
     }
 
     void PopBack()
     {
-        if (head == nullptr)        // head가 nullptr이라면
+
+        if (tail == nullptr)
         {
-            cout << "Linked List is Empty" << endl;     // 출력
+            cout << "Linked List Empty" << endl;
         }
         else
-        {
-            Node* deleteNode = head;        // deleteNode가 head를 가리킴
-            Node* previousNode = nullptr;   // previousNode의 기본값 nullptr
+        {  
+            Node* deleteNode = tail;
 
-            if (size == 1)
+            if (head == tail)
             {
-                head = deleteNode->next;    // head를 deleteNode.next 로 넘김
+                head = nullptr;
+                tail = nullptr;
 
-                delete deleteNode;          // deleteNode 삭제
+                delete deleteNode;
             }
             else
             {
-                while (deleteNode->next != nullptr) // deleteNode의 next가 nullptr이 아니라면 반복
-                {
-                    previousNode = deleteNode;      // 이전 노드를 기억하고 
-                    deleteNode = deleteNode->next;  // deleteNode의 위치를 next로
-                }
-
-                previousNode->next = deleteNode->next;  // 위치 기억
-
-                delete deleteNode;                      // deleteNode 삭제
+                tail->previous->next = nullptr;
+                tail = tail->previous;
+                delete deleteNode;
             }
-            size--;                                     // 값 다운
+            size--;
         }
+    }
+
+    void PushFront(T data)
+    {
+        Node* newNode = new Node;
+
+        newNode->data = data;
+        newNode->next = nullptr;
+        newNode->previous = nullptr;
+
+        if (head == nullptr)
+        {
+            head = newNode;
+            tail = newNode;
+        }
+        else
+        {
+            head->previous = newNode;
+            newNode->next = head;
+            head = newNode;
+        }
+        size++;
+    }
+
+    int &Size()
+    {
+        return size;
     }
 
     void Show()
@@ -138,21 +116,21 @@ public:
     }
 
 
+
 };
 
 int main()
 {
-    SingleLinkedList<int> singleLinkedList;
+    DoubleLinkedList<int> Double;
 
-    singleLinkedList.PushBack(10);
-    singleLinkedList.PushBack(20);
-    singleLinkedList.PushBack(30);
+    Double.PushFront(10);
+    Double.PushFront(20);
+    Double.PushFront(30);
 
-    singleLinkedList.PopBack();
+    cout << "Double Linked List의 Size : " << Double.Size() << endl;
+    //Double.PopBack();
 
-    //singleLinkedList.PopFront();
-
-    singleLinkedList.Show();
+    Double.Show();
 
     return 0;
 }
