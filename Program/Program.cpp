@@ -8,6 +8,12 @@ class DoubleLinkedList
 private:
     int size;
 
+    struct Node;    // 프로토타입 선언(선언만 하고 구현은 아직 안함)
+
+    Node* head;
+    Node* tail;
+
+public:
     struct Node
     {
         T data;
@@ -15,10 +21,7 @@ private:
         Node* previous;
     };
 
-    Node* head;
-    Node* tail;
 
-public:
     DoubleLinkedList()
     {
         size = 0;
@@ -53,7 +56,7 @@ public:
 
         if (tail == nullptr)
         {
-            cout << "Linked List Empty" << endl;
+            cout << "Linked List is Empty" << endl;
         }
         else
         {  
@@ -98,9 +101,75 @@ public:
         size++;
     }
 
+    void PopFront()
+    {
+        if (head == nullptr)
+        {
+            cout << "Linked List is Empty" << endl;
+        }
+        else
+        {
+            Node* deleteNode = head;
+
+            if (head == tail)
+            {
+                head = nullptr;
+                tail = nullptr;
+            }
+            else
+            {
+                deleteNode->next->previous = nullptr;
+                head = head->next;
+            }
+            delete deleteNode;
+            
+            size--;
+        }
+    }
+
     int &Size()
     {
         return size;
+    }
+
+    Node* Begin()
+    {
+        return head;
+    }
+    
+    void Insert(Node* position, T data)
+    {
+        if (head == nullptr)
+        {
+            PushBack(data);
+        }
+        else
+        {
+            Node* previousNode = position;
+            Node* nextNode = position->next;
+
+            if (nextNode == nullptr)
+            {
+                PushBack(data);
+            }
+            else if (previousNode->previous == nullptr)
+            {
+                PushFront(data);
+            }
+            else
+            {
+                Node* newNode = new Node;
+                newNode->data = data;
+
+                previousNode->next = newNode;
+                nextNode->previous = newNode;
+
+                newNode->next = nextNode;
+                newNode->previous = previousNode;
+
+                size++;
+            }
+        }
     }
 
     void Show()
@@ -115,22 +184,36 @@ public:
         }
     }
 
-
-
+    ~DoubleLinkedList()
+    {
+        while (head != nullptr)
+        {
+            PopFront();
+        }
+    }
 };
 
 int main()
 {
     DoubleLinkedList<int> Double;
 
-    Double.PushFront(10);
-    Double.PushFront(20);
-    Double.PushFront(30);
+    Double.PushFront(10); 
+    Double.PushFront(20); 
+    Double.PushFront(30); 
 
-    cout << "Double Linked List의 Size : " << Double.Size() << endl;
-    //Double.PopBack();
+    Double.Insert(Double.Begin()->next, 99);
 
-    Double.Show();
+    cout << "Double Linked List의 Size : " << Double.Begin()->next << endl;
+
+    cout << "Double Linked List의 Size : " << Double.Size() << endl; 
+  
+    Double.~DoubleLinkedList();
+    
+    Double.Show(); 
+
+
+
+
 
     return 0;
 }
