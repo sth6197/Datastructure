@@ -2,153 +2,136 @@
 
 using namespace std;
 
+#define SIZE 10
+
 template <typename T>
-class CircleLinkedList
+class Stack
 {
 private:
-    int size;
-
-    struct Node
-    {
-        T data;
-        Node* next;
-    };
-
-    Node* head;
-
+    T container[SIZE];
+    int top;
+    
 public:
-    CircleLinkedList()
+    Stack()
     {
-        size = 0;
-        head = nullptr;
+        top = -1;
+
+        for (int i = 0; i < SIZE; i++)
+        {
+            container[i] = 0;
+        }
     }
 
-    void PushBack(T data)
+    void Push(T data)
     {
-        Node* newnode = new Node;
-        newnode->data = data;
-
-        if (head == nullptr)
+        if (top >= SIZE-1)
         {
-            head = newnode;
-            newnode->next = head;
+            cout << "Stack Overflow" << endl;
         }
         else
         {
-            newnode->next = head->next;
-            head->next = newnode;
-            head = newnode;
+            container[++top] = data;
         }
-        size++;
     }
 
-    void PushFront(T data)
+    bool Empty()
     {
-        Node* newnode = new Node;
-        newnode->data = data;
-
-        if (head == nullptr)
+        if (top <= -1)
         {
-            head = newnode;
-            newnode->next = head;
+            return true;
         }
         else
         {
-            newnode->next = head->next;
-            head->next = newnode;
+            return false;
         }
-        size++;
     }
-
-    void PopFront()
+    
+    void Pop()
     {
-        if (head == nullptr)
+        if (Empty())
         {
-            cout << "Linked List is Empty" << endl;
+            cout << "Stack is Empty" << endl;
         }
         else
         {
-            Node* deletenode = head->next;
-
-            if (head == head->next)
-            {
-                head = nullptr;
-
-                delete deletenode;
-            }
-            else
-            {
-                head->next = deletenode->next;    // head를 deletenode의 next로 넘겨주기
-            }
-            delete deletenode;
-
-            size--;
+            top--;
         }
-    }
 
-    void PopBack()
+    }
+    
+    int& Size()
     {
-        if (head == nullptr)
-        {
-            cout << "Linked List is Empty" << endl;
-        }
-        else
-        {
-            Node* deletenode = head;
-            Node* currentnode = head;
-
-            if (head == head->next)
-            {
-                head = nullptr;
-            }
-            else
-            {
-                for(int i = 0; i < size-1; i++)
-                {
-                    currentnode = currentnode->next;
-
-                    currentnode->next = head->next;
-
-                    head = currentnode;
-                }
-                delete deletenode;
-
-                size--;
-            }
-        }
+        return top;
     }
 
-    void Show()
+    T & Top()
     {
-        if (head != nullptr)
-        {
-            Node* currentNode = head->next;
-
-            for (int i = 0; i < size; i++)
-            {
-                cout << currentNode->data << endl;
-
-                currentNode = currentNode->next;
-            }
-        }
+        return container[top];
     }
-
 };
+
+bool CheckBracket(std::string content)
+{
+    Stack<char> stack;
+
+    if (content.length() <= 0)
+    {
+        return false;
+    }
+
+    char arr[SIZE];
+   
+    for (int i = 0; arr[i] != NULL; i++)
+    {
+        if (arr[i] == '{' || arr[i] == '[' || arr[i] == '(')
+        {
+            stack.Push(arr[i]);
+            return true;
+        }
+        if (arr[i] == ')' || arr[i] == ']' || arr[i] == '}')
+        {
+            stack.Push(arr[i]);
+            return true;
+
+            if (stack.Empty())
+            {
+                return false;
+            }
+            if (arr[i] != stack.Top())
+            {
+                return false;
+            }
+            else
+            {
+                stack.Pop();
+            }
+
+        }
+    }
+
+    if (stack.Empty())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 
 int main()
 {
-    CircleLinkedList<int> circle;
+    CheckBracket("");
 
-    circle.PushFront(10);
-    circle.PushFront(20);
-    circle.PushFront(30);
-    circle.PushFront(99);
+    cout << CheckBracket("{[()]}") << endl;
 
-    circle.PopBack();
+    cout << CheckBracket("{[((}") << endl;
+
+    cout << CheckBracket("{[)]}") << endl;
 
 
-    circle.Show();
 
     return 0;
 }
