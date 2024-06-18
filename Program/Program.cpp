@@ -1,20 +1,25 @@
 ﻿#include <iostream>
 
+#define SIZE 5
+
 using namespace std;
 
-#define SIZE 10
-
 template <typename T>
-class Stack
+class CircleQueue
 {
 private:
+    int front;
+    int rear;
+    int size;
+
     T container[SIZE];
-    int top;
-    
+
 public:
-    Stack()
+    CircleQueue()
     {
-        top = -1;
+        front = SIZE - 1;
+        rear = SIZE - 1;
+        size = 0;
 
         for (int i = 0; i < SIZE; i++)
         {
@@ -22,21 +27,9 @@ public:
         }
     }
 
-    void Push(T data)
-    {
-        if (top >= SIZE-1)
-        {
-            cout << "Stack Overflow" << endl;
-        }
-        else
-        {
-            container[++top] = data;
-        }
-    }
-
     bool Empty()
     {
-        if (top <= -1)
+        if (front == rear)
         {
             return true;
         }
@@ -45,92 +38,80 @@ public:
             return false;
         }
     }
-    
+
+    void Push(T data)
+    {
+        if (front == ((rear + 1) % SIZE))
+        {
+            cout << "Circle Queue is Overflow" << endl;
+        }
+        else
+        {
+            rear = (rear + 1) % SIZE;
+            container[rear] = data;
+
+            size++;
+        }
+    }
+
     void Pop()
     {
         if (Empty())
         {
-            cout << "Stack is Empty" << endl;
+            cout << "Circle Queue is Empty" << endl;
         }
         else
         {
-            top--;
+            front = (front + 1) % SIZE;
         }
-
     }
-    
+
+    T& Front()
+    {
+        if (Empty())
+        {
+            exit(1);
+        }
+        else
+        {
+            return container[front];
+        }
+    }
+
+    T& Back()
+    {
+        if (Empty())
+        {
+            exit(1);
+        }
+        else
+        {
+            return container[rear - 1];
+        }
+    }
+
     int& Size()
     {
-        return top;
+        return size;
     }
 
-    T & Top()
-    {
-        return container[top];
-    }
 };
-
-bool CheckBracket(std::string content)
-{
-    Stack<char> stack;
-
-    if (content.length() <= 0)
-    {
-        return false;
-    }
-
-    char arr[SIZE];
-   
-    for (int i = 0; arr[i] != NULL; i++)
-    {
-        if (arr[i] == '{' || arr[i] == '[' || arr[i] == '(')
-        {
-            stack.Push(arr[i]);
-            return true;
-        }
-        if (arr[i] == ')' || arr[i] == ']' || arr[i] == '}')
-        {
-            stack.Push(arr[i]);
-            return true;
-
-            if (stack.Empty())
-            {
-                return false;
-            }
-            if (arr[i] != stack.Top())
-            {
-                return false;
-            }
-            else
-            {
-                stack.Pop();
-            }
-
-        }
-    }
-
-    if (stack.Empty())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
 
 int main()
 {
-    CheckBracket("");
+    CircleQueue<int> circlequeue;
 
-    cout << CheckBracket("{[()]}") << endl;
+    circlequeue.Push(10);
+    circlequeue.Push(20);
+    circlequeue.Push(30);
+    circlequeue.Push(40);
 
-    cout << CheckBracket("{[((}") << endl;
+    while (circlequeue.Empty() == false) 
+    {
+        cout << circlequeue.Front() << endl;
 
-    cout << CheckBracket("{[)]}") << endl;
-
+        circlequeue.Pop();
+    }
 
 
     return 0;
