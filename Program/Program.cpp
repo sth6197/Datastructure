@@ -1,111 +1,95 @@
-﻿#include <iostream>
-#include <vector>
+﻿#pragma warnings(disable : 4996)
+#include <iostream>
 
 using namespace std;
 
-template <typename T>
-class Vector
+class String
 {
 private:
+    char* container;
     int size;
-    int capacity;
-
-    T* container;
 
 public:
-    Vector()
+    String()
     {
         size = 0;
-        capacity = 0;
         container = nullptr;
     }
 
-    void Resize(int newSize)
+    void operator=(const char* content)
     {
-        // 1. capacity에 새로운 size값을 저장한다.
-        capacity = newSize;
+        int arraySize = strlen(content) + 1;
+        size = strlen(content);
 
-        // 2. 새로운 포인터 변수를 생성해서 새롭게 만들어진 메모리 공간을 가리키도록 한다.
-        T* arr = new T[capacity];
+        if (container == nullptr)
+        {
+            container = new char[arraySize];
 
-        // 3. 새로운 메모리 공간의 값을 초기화한다.
-        for (int i = 0; i < capacity; i++)
-        {
-            arr[i] = NULL;
+            for (int i = 0; i < arraySize; i++)
+            {
+                container[i] = content[i];
+            }
         }
-        
-        // 4. 기존 배열에 있는 값을 복사해서 새로운 배열에 넣는다.
-        for (int i = 0; i < size; i++)
+        else
         {
-            arr[i] = container[i];
-        }
-        
-        // 5. 기존 배열의 메모리를 해제한다.
-        if (container != nullptr)
-        {
-            delete[] container;
-        }
+            char* newContainer = new char[arraySize];
 
-        // 6. 기존에 배열을 가리키던 포인터 변수의 값을 새로운 배열에 시작 주소로 가리키도록 한다.
-        container = arr;
+            for (int i = 0; i < arraySize; i++)
+            {
+                newContainer[i] = content[i];
+            }
+
+            delete container;
+
+            container = newContainer;
+        }
     }
     
-    void PushBack(T data)
+    int Compare(const char* content)
     {
-        if (capacity <= 0)
+        for (int i = 0; i != size; i++)
         {
-            Resize(1);
+            if (content[i] > content[i])
+            {
+                return 1;
+            }
+            else if (content[i] < content[i])
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
         }
-        else if (size >= capacity)
-        {
-            Resize(capacity * 2);
-        }
-        
-        container[size++] = data;
-    }
-
-    void PopBack()
-    {
-
-    }
-    
-    void Reserve(int newSize)
-    {
 
     }
 
-    T& operator[](const int index)
+    char& operator[] (int index)
     {
         return container[index];
     }
-    
+
     int& Size()
     {
         return size;
-    }
-
-    ~Vector()
-    {
-        if (container != nullptr)
-        {
-            delete[] container;
-        }
     }
 };
 
 int main()
 {
-    Vector<int> vector;
-    
-    vector.PushBack(10);
-    vector.PushBack(20);
-    vector.PushBack(30);
+    String string;
 
-    for (int i = 0; i < vector.Size(); i++)
+    string = "Janna";
+
+    cout << "string의 크기 : " << string.Size() << endl;
+
+    string = "Allistar";
+
+    for (int i = 0; i < string.Size(); i++)
     {
-        cout << vector[i] << endl;
+        cout << string[i];
     }
-
 
     return 0;
 }
