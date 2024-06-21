@@ -1,95 +1,55 @@
-﻿#pragma warnings(disable : 4996)
-#include <iostream>
+﻿#include <iostream>
+
+#define SIZE 6
 
 using namespace std;
 
-class String
+template <typename KEY, typename VALUE>
+class HashTable
 {
 private:
-    char* container;
-    int size;
+    struct Node
+    {
+        KEY key;
+        VALUE value;
+        
+        Node* next;
+    };
+
+    struct Bucket
+    {
+        int count;
+
+        Node* head;
+    };
+    
+    Bucket bucket[SIZE];
 
 public:
-    String()
+    HashTable()
     {
-        size = 0;
-        container = nullptr;
-    }
-
-    void operator=(const char* content)
-    {
-        int arraySize = strlen(content) + 1;
-        size = strlen(content);
-
-        if (container == nullptr)
+        for (int i = 0; i < SIZE; i++)
         {
-            container = new char[arraySize];
-
-            for (int i = 0; i < arraySize; i++)
-            {
-                container[i] = content[i];
-            }
-        }
-        else
-        {
-            char* newContainer = new char[arraySize];
-
-            for (int i = 0; i < arraySize; i++)
-            {
-                newContainer[i] = content[i];
-            }
-
-            delete container;
-
-            container = newContainer;
+            bucket[i].count = 0;
+            bucket[i].head = nullptr;
         }
     }
-    
-    int Compare(const char* content)
+
+    void HashFuntion(KEY key)
     {
-        for (int i = 0; i != size; i++)
-        {
-            if (content[i] > content[i])
-            {
-                return 1;
-            }
-            else if (content[i] < content[i])
-            {
-                return -1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        
 
     }
 
-    char& operator[] (int index)
-    {
-        return container[index];
-    }
 
-    int& Size()
-    {
-        return size;
-    }
+
 };
+
 
 int main()
 {
-    String string;
 
-    string = "Janna";
-
-    cout << "string의 크기 : " << string.Size() << endl;
-
-    string = "Allistar";
-
-    for (int i = 0; i < string.Size(); i++)
-    {
-        cout << string[i];
-    }
+    
 
     return 0;
 }
