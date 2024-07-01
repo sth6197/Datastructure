@@ -24,6 +24,7 @@
     <ProjectGuid>{94f7ec40-d368-420a-9125-c8d1f413eb33}</ProjectGuid>
     <RootNamespace>Class12thGraphAdjacencyMatrix</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Class12th (Graph Adjancency Matrix)</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
